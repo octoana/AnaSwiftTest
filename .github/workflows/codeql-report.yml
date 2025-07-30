@@ -1,0 +1,25 @@
+name: CodeQL Report
+
+on:
+  push:
+    paths:
+      - '.github/workflows/codeql-report.yml'
+  workflow_dispatch:
+  #every 6 hours
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  run-report:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Use felickz/codeql-report action
+      uses: felickz/codeql-report@main
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload CodeQL Report CSV as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: "CodeQLReport-${{ github.run_id }}"
+        path: ./*.csv
